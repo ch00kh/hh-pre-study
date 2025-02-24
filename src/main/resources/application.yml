@@ -1,0 +1,25 @@
+spring:
+  jwt:
+    secret: hanghaeninetyninebackendpluseighthprestudy
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://211.110.222.140:3306/SPRING_LAB
+    username: springUser
+    password: springPass
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        highlight_sql: true
+
+logging:
+  level:
+    org.hibernate:
+      SQL: debug
+      orm.jdbc.bind: trace
+      type.descriptor.sql: trace
