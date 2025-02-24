@@ -26,42 +26,47 @@ public class ApiResponse<T> {
 
     public static ResponseEntity<ApiResponse<?>> ok(String message) {
         return ResponseEntity.ok()
-                .body(new ApiResponse<>("SUCCESS", message));
+                .body(new ApiResponse<>(ResponseCode.SUCCESS.name(), message));
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> ok(String message, T data) {
         return ResponseEntity.ok()
-                .body(new ApiResponse<>("SUCCESS", message, data));
+                .body(new ApiResponse<>(ResponseCode.SUCCESS.name(), message, data));
     }
 
     public static ResponseEntity<ApiResponse<?>> create(String message) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>("CREATE", message));
+                .body(new ApiResponse<>(ResponseCode.CREATE.name(), message));
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> create(String message, T data) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>("CREATE", message));
+                .body(new ApiResponse<>(ResponseCode.CREATE.name(), message, data));
     }
 
     public static ResponseEntity<ApiResponse<?>> unauthorized(String message) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiResponse<>("UNAUTHORIZED", message));
+                .body(new ApiResponse<>(ResponseCode.UNAUTHORIZED.name(), message));
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> unauthorized(String message, T data) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiResponse<>("UNAUTHORIZED", message, data));
+                .body(new ApiResponse<>(ResponseCode.UNAUTHORIZED.name(), message, data));
     }
 
     public static ResponseEntity<ApiResponse<?>> invalid(String message) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse<>("INVALID", message));
+                .body(new ApiResponse<>(ResponseCode.INVALID.name(), message));
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> invalid(String message, T data) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse<>("INVALID", message, data));
+                .body(new ApiResponse<>(ResponseCode.INVALID.name(), message, data));
+    }
+
+    public static ResponseEntity<ApiResponse<?>> badRequest(String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(ResponseCode.BAD_REQUEST.name(), message));
     }
 
 }

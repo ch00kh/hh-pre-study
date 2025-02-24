@@ -6,15 +6,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import site.ch00kh.domain.account.dao.account.Account;
 import site.ch00kh.domain.account.dto.AccountDetails;
+import site.ch00kh.global.common.ResponseCode;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -23,6 +27,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String requestMethod = request.getMethod();
+        if (!requestMethod.equals("POST")) {
+            FilterResponse.error(response, BAD_REQUEST, ResponseCode.BAD_REQUEST, "잘못된 HTTP Method 입니다.");
+            return;
+        }
 
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access");
@@ -41,9 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
             //response body
             PrintWriter writer = response.getWriter();
             writer.print("access token expired");
-
-            //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setStatus(UNAUTHORIZED.value());
             return;
         }
 
@@ -57,7 +65,7 @@ public class JWTFilter extends OncePerRequestFilter {
             writer.print("invalid access token");
 
             //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setStatus(UNAUTHORIZED.value());
             return;
         }
 

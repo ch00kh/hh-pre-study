@@ -1,7 +1,9 @@
 package site.ch00kh.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,12 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import site.ch00kh.domain.account.dao.jwttoken.JwtTokenRepository;
-import site.ch00kh.global.auth.CustomLogoutFilter;
-import site.ch00kh.global.auth.JWTFilter;
-import site.ch00kh.global.auth.JWTUtil;
-import site.ch00kh.global.auth.LoginFilter;
+import site.ch00kh.global.auth.*;
+import site.ch00kh.global.common.ApiResponse;
+import site.ch00kh.global.common.ResponseCode;
+import site.ch00kh.global.common.Role;
 
 import java.util.Collections;
+
+import static site.ch00kh.global.common.ResponseCode.*;
 
 @Configuration
 @EnableWebSecurity
@@ -49,14 +53,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)                 // csrf : disable
-                .formLogin(AbstractHttpConfigurer::disable)        // From 로그인 방식 : disable
-                .httpBasic(AbstractHttpConfigurer::disable)        // http basic 인증 방식 : disable
-                .authorizeHttpRequests((auth) -> auth       // 경로별 인가 작업
+        http.csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/api/signup").permitAll()
-                        .requestMatchers("/login", "/").permitAll()
-                        .requestMatchers("/reissue").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/reissue").permitAll()
+                        .requestMatchers("/admin").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated())
 
                 // CORS 설정
@@ -73,13 +78,8 @@ public class SecurityConfig {
                     return configuration;
                 })))
 
-                // JWTFilter 등록 (LoginFilter 이전에 동작)
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
-
-                // UsernamePasswordAuthenticationFilter 위치에 커스텀한 LoginFilter를 등록
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtTokenRepository), UsernamePasswordAuthenticationFilter.class)
-
-                // CustomLogoutFilter 등록 (LogoutFilter 이전에 동작)
+                .addFilterBefore(new JWTFilter(jwtUtil), CustomLoginFilter.class)
+                .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtTokenRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, jwtTokenRepository), LogoutFilter.class)
 
                 .sessionManagement((session) -> session     // 세션 설정
