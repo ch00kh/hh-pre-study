@@ -2,10 +2,11 @@ package site.ch00kh.global.auth;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import site.ch00kh.domain.account.dao.jwttoken.JwtToken;
-import site.ch00kh.domain.account.dao.jwttoken.JwtTokenRepository;
+import site.ch00kh.domain.account.dao.JwtToken;
+import site.ch00kh.domain.account.dao.JwtTokenRepository;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JWTUtil {
 
     private SecretKey secretKey;
@@ -36,7 +38,17 @@ public class JWTUtil {
 
     // 검증 메소드 : 만료 여부
     public Boolean isExpired(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+
+        Date expiration = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration();
+        Date now = new Date();
+
+        log.info("토큰 만료 시간: {}", expiration);
+        log.info("현재 시간: {}", now);
+        log.info("시간 차이(ms): {}", expiration.getTime() - now.getTime());
+
+        return expiration.before(now);
+
+//        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
     // 토큰 판단용 메소드

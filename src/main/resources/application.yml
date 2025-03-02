@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -19,7 +19,10 @@ spring:
 
 logging:
   level:
-    org.hibernate:
-      SQL: debug
-      orm.jdbc.bind: trace
-      type.descriptor.sql: trace
+    org:
+      hibernate:
+        SQL: debug
+        orm.jdbc.bind: trace
+        type.descriptor.sql: trace
+      springframework:
+        security: debug

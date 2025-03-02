@@ -3,7 +3,7 @@ package site.ch00kh.domain.account.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.ch00kh.domain.account.dao.account.Account;
+import site.ch00kh.domain.account.dao.Account;
 
 @Getter
 @NoArgsConstructor

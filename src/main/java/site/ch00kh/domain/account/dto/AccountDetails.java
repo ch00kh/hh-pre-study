@@ -3,7 +3,7 @@ package site.ch00kh.domain.account.dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import site.ch00kh.domain.account.dao.account.Account;
+import site.ch00kh.domain.account.dao.Account;
 
 import java.util.ArrayList;
 import java.util.Collection;

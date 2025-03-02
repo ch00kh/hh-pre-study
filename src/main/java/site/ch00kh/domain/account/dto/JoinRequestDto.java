@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import site.ch00kh.domain.account.dao.account.Account;
+import site.ch00kh.domain.account.dao.Account;
 import site.ch00kh.global.common.Role;
 
 import java.time.LocalDateTime;
@@ -28,7 +27,7 @@ public class JoinRequestDto {
                 .password(decryptedPassword)
                 .role(Role.USER.name())
                 .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
                 .build();
     }
 

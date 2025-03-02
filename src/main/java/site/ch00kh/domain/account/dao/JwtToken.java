@@ -1,4 +1,4 @@
-package site.ch00kh.domain.account.dao.jwttoken;
+package site.ch00kh.domain.account.dao;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

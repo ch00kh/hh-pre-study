@@ -2,7 +2,6 @@ package site.ch00kh.global.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -11,13 +10,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import site.ch00kh.domain.account.dao.jwttoken.JwtToken;
-import site.ch00kh.domain.account.dao.jwttoken.JwtTokenRepository;
+import site.ch00kh.domain.account.dao.JwtTokenRepository;
 import site.ch00kh.domain.account.dto.AccountDetails;
-import site.ch00kh.global.common.ResponseCode;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 
 import static site.ch00kh.global.common.ResponseCode.*;
@@ -71,7 +67,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .getAuthority();
 
         //토큰 생성
-        String accessToken = jwtUtil.createJwt("accessToken", username, role, 60 * 60 * 10L);
+        String accessToken = jwtUtil.createJwt("accessToken", username, role, 60 * 60 * 1000L);
         String refreshToken = jwtUtil.createJwt("refreshToken", username, role, 60 * 60 * 24 * 1000L);
 
         //Refresh 토큰 저장

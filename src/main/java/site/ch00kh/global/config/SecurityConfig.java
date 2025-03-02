@@ -1,9 +1,8 @@
 package site.ch00kh.global.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,15 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import site.ch00kh.domain.account.dao.jwttoken.JwtTokenRepository;
+import site.ch00kh.domain.account.dao.JwtTokenRepository;
 import site.ch00kh.global.auth.*;
-import site.ch00kh.global.common.ApiResponse;
-import site.ch00kh.global.common.ResponseCode;
 import site.ch00kh.global.common.Role;
 
 import java.util.Collections;
-
-import static site.ch00kh.global.common.ResponseCode.*;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +55,10 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/api/signup").permitAll()
                         .requestMatchers("/api/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/post").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/post/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/post/**").authenticated()
                         .requestMatchers("/api/reissue").permitAll()
                         .requestMatchers("/admin").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated())
@@ -78,8 +77,8 @@ public class SecurityConfig {
                     return configuration;
                 })))
 
-                .addFilterBefore(new JWTFilter(jwtUtil), CustomLoginFilter.class)
                 .addFilterAt(new CustomLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtTokenRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JWTFilter(jwtUtil), CustomLoginFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, jwtTokenRepository), LogoutFilter.class)
 
                 .sessionManagement((session) -> session     // 세션 설정

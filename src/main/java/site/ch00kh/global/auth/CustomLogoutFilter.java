@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
-import site.ch00kh.domain.account.dao.jwttoken.JwtTokenRepository;
+import site.ch00kh.domain.account.dao.JwtTokenRepository;
 
 import java.io.IOException;
 import java.util.Arrays;
