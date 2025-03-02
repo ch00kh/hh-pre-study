@@ -13,7 +13,6 @@ public class PostExceptionHandler extends Exception {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestException(BadRequestException e) {
-        System.out.println("test");
         log.error("Username is Exist Error occurred at : [{}] ", e.getMessage());
         return ApiResponse.invalid("입력 값을 확인해주세요.");
     }
