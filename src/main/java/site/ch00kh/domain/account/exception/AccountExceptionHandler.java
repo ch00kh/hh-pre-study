@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import site.ch00kh.global.common.ApiResponse;
 
 @Slf4j
-@ControllerAdvice
+@ControllerAdvice(basePackages = "site.ch00kh.domain.account.api")
 public class AccountExceptionHandler extends Exception {
 
     @ExceptionHandler(BadRequestException.class)

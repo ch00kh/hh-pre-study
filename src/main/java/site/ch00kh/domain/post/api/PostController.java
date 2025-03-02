@@ -2,15 +2,14 @@ package site.ch00kh.domain.post.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import site.ch00kh.domain.account.dto.AccountDetails;
 import site.ch00kh.domain.post.application.PostService;
+import site.ch00kh.domain.post.dto.PostDeleteRequestDto;
 import site.ch00kh.domain.post.dto.PostPageRequestDto;
 import site.ch00kh.domain.post.dto.PostWriteRequestDto;
 import site.ch00kh.domain.post.dto.PostWriteResponseDto;
@@ -49,7 +48,7 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<?> modify(@AuthenticationPrincipal AccountDetails accountDetails,
                                     @RequestBody PostWriteRequestDto requestDto,
-                                    @PathVariable Long id) {
+                                    @PathVariable Long id) throws BadRequestException {
 
         PostWriteResponseDto responseDto = postService.modify(id, requestDto, accountDetails);
         return ApiResponse.ok("게시글이 수정되었습니다.",  responseDto);
@@ -57,8 +56,8 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal AccountDetails accountDetails,
-                                    @RequestBody PostWriteRequestDto requestDto,
-                                    @PathVariable Long id) {
+                                    @RequestBody PostDeleteRequestDto requestDto,
+                                    @PathVariable Long id) throws BadRequestException {
 
         postService.delete(id, requestDto, accountDetails);
         return ApiResponse.ok("게시글이 삭제되었습니다.");
